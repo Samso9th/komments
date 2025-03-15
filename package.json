@@ -1,0 +1,44 @@
+{
+  "name": "komments",
+  "version": "1.0.0",
+  "description": "A tool that integrates with Google Gemini AI to analyze code and suggest comments",
+  "main": "dist/src/index.js",
+  "bin": {
+    "komments": "./dist/bin/komments.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "start": "node ./dist/bin/komments.js",
+    "dev": "ts-node ./bin/komments.ts"
+  },
+  "keywords": [
+    "comments",
+    "code-analysis",
+    "gemini-ai",
+    "documentation",
+    "git"
+  ],
+  "author": "Samso9th",
+  "license": "MIT",
+  "dependencies": {
+    "@google/generative-ai": "^0.24.0",
+    "chalk": "^4.1.2",
+    "cli-progress": "^3.12.0",
+    "commander": "^11.1.0",
+    "dotenv": "^16.3.1",
+    "inquirer": "^8.2.6",
+    "ora": "^5.4.1",
+    "simple-git": "^3.21.0"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "devDependencies": {
+    "@types/cli-progress": "^3.11.6",
+    "@types/inquirer": "^9.0.7",
+    "@types/node": "^22.13.10",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.2"
+  }
+}
