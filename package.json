@@ -1,10 +1,17 @@
 {
-  "name": "komments",
+  "name": "@samso9th/komments",
   "version": "1.0.0",
   "description": "A tool that integrates with Google Gemini AI to analyze code and suggest comments",
   "main": "dist/src/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Samso9th/komments.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
   "bin": {
-    "komments": "./dist/bin/komments.js"
+    "komments": "dist/bin/komments.js"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

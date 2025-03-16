@@ -3,7 +3,8 @@
 # TypeScript
 node_modules/
 dist/
-
+docs.txt
+.npmrc
 # Environment files
 .env
 .env.local
