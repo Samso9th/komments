@@ -1,62 +1,62 @@
 [
   {
-    "file": "bin/komments.ts",
-    "line": 20,
-    "codeSnippet": "async function main(options: { interactive?: boolean, temperature?: number }) {...",
-    "suggestedComment": "/**\n * @async\n * Executes the main workflow to generate and potentially apply comment suggestions for modified code.\n * This function orchestrates the process of validating API keys, scanning Git changes, analyzing code,\n * saving suggestions, and applying them based on user-specified options.\n *\n * The primary purpose is to automate the generation of meaningful comments for code modifications,\n * improving code maintainability and documentation. It's designed to be integrated into a development\n * workflow, triggered after code changes are made, and offers both automated (non-interactive)\n * and interactive modes for applying the generated suggestions.\n *\n * Business context: This functionality is intended to streamline code review processes and enhance\n * code quality by automatically suggesting relevant comments, reducing the manual effort needed for\n * documentation and improving overall code understanding within development teams.\n *\n * Design rationale: The function is structured in sequential steps to ensure a clear and logical flow:\n * 1. API key validation is prioritized to ensure access to necessary services for code"
+    "id": "gen-1742133343833",
+    "timestamp": "2025-03-16T13:55:43.833Z",
+    "suggestions": [
+      {
+        "file": "src/suggestions.ts",
+        "line": 41,
+        "codeSnippet": "async function saveSuggestions(suggestions: CommentSuggestion[]): Promise<void> {\r...",
+        "suggestedComment": "/**\n * saveSuggestions - Asynchronously handles savesuggestions operation\n * @param suggestions Parameter description\n * @returns {Promise} Promise that resolves when the operation completes\n */"
+      },
+      {
+        "file": "src/suggestions.ts",
+        "line": 92,
+        "codeSnippet": "async function applySuggestions(suggestions: CommentSuggestion[]): Promise<void> {\r...",
+        "suggestedComment": "/**\n * Presents an interactive command-line interface to review and apply comment suggestions.\n * This function guides the user through each suggested comment, prompting them to apply, skip, edit, or exit.\n * It is designed for interactive mode in the comment generation process, allowing developers to manually review and approve AI-generated comments before they are written to source files.\n * This ensures quality control and prevents unintended changes to the codebase.\n * The interactive prompt uses `inquirer` to provide a user-friendly experience for reviewing and managing comment suggestions.\n *\n * @param suggestions - An array of CommentSuggestion objects, each containing details about a suggested comment including the file, line number, code snippet, and the suggested comment text.\n * @returns A Promise that resolves when the interactive review session is completed, either by processing all suggestions or by the user choosing to exit.\n */"
+      },
+      {
+        "file": "src/suggestions.ts",
+        "line": 171,
+        "codeSnippet": "async function applyCommentToFile(filePath: string, lineNumber: number, comment: string): Promise<void> {\r...",
+        "suggestedComment": "```typescript\n/**\n * Asynchronously applies a comment to a specific line in a file.\n * This function is designed to programmatically add comments to code files, \n * for example, during automated documentation updates or code modification scripts. \n * It dynamically determines the comment style based on the file extension using the `getCommentStyle` function, \n * supporting various programming languages. The function resolves relative file paths against the project root.\n * It handles single-line, multi-line, and block comments appropriately based on the file type and comment content.\n * @param filePath The path to the file to be modified. Can be absolute or relative to the project root.\n * @param lineNumber The line number where the comment should be inserted (1-based index).\n * @param comment The comment string to be inserted. Can be a single-line or multi-line string.\n * @returns {Promise<void>} A Promise that resolves when the comment has been successfully applied to the file.\n */\n```"
+      },
+      {
+        "file": "src/suggestions.ts",
+        "line": 217,
+        "codeSnippet": "function getCommentStyle(extension: string): CommentStyle {\r...",
+        "suggestedComment": "/**\n * Retrieves the appropriate comment style (prefix and suffix) based on the provided file extension.\n * This function is used to dynamically determine the correct syntax for commenting code in different programming languages.\n * It supports a predefined set of common file extensions and their corresponding comment styles.\n * If an extension is not found in the predefined styles, it defaults to a single-line comment style ('//').\n * This is crucial for features that need to generate or manipulate code comments across various languages, ensuring correct syntax and avoiding parsing errors.\n * @param extension The file extension (e.g., '.js', '.py', '.html') as a string. Case-insensitive.\n * @returns An object of type CommentStyle, containing 'prefix' and 'suffix' properties representing the comment syntax for the given extension.\n * For example, for '.js', it returns { prefix: '//', suffix: '' }, and for '.html', it returns { prefix: '<!--', suffix: '-->' }.\n */"
+      }
+    ]
   },
   {
-    "file": "src/analyzer.ts",
-    "line": 40,
-    "codeSnippet": "async function analyzeCode(filePaths: string[], temperature: number = 0.7): Promise<CommentSuggestion[]> {...",
-    "suggestedComment": "/**\n * analyzeCode - Asynchronously handles analyzecode operation\n * @param filePaths Parameter description\n * @param temperature Parameter description\n * @returns {Promise} Promise that resolves when the operation completes\n */"
-  },
-  {
-    "file": "src/config.ts",
-    "line": 22,
-    "codeSnippet": "async function validateApiKey(): Promise<boolean> {...",
-    "suggestedComment": "/**\n * validateApiKey - Asynchronously handles validateapikey operation\n * @returns {Promise} Promise that resolves when the operation completes\n */"
-  },
-  {
-    "file": "src/config.ts",
-    "line": 29,
-    "codeSnippet": "async function setupApiKey(): Promise<boolean> {...",
-    "suggestedComment": "```typescript\n/**\n * Prompts the user to input a Gemini API key, saves it to .env.local and .env files in the project root, and updates .gitignore to prevent accidental commit of API keys.\n * This function is executed when the application detects that the GOOGLE_GEMINI_API_KEY environment variable is not set.\n * It guides the user to obtain a free API key from Google AI Studio, then securely stores it in environment files for access by the application.\n * Saving to both .env.local (for local development, typically not committed) and .env (for broader environment configuration, potentially committed but should ideally be managed separately in production) provides flexibility and backward compatibility.\n * Updating .gitignore is crucial for security, ensuring sensitive API keys are not exposed in version control.\n * @returns {Promise<boolean>} - A Promise that resolves to true if the API key setup process completes successfully.\n */\n```"
-  },
-  {
-    "file": "src/git.ts",
-    "line": 11,
-    "codeSnippet": "async function scanGitChanges(): Promise<string[]> {...",
-    "suggestedComment": "/**\n * Scans a Git repository for changes and returns a list of paths to modified code files.\n *\n * This function leverages the 'simple-git' library to interact with Git.\n * It first checks if the current working directory is a valid Git repository.\n * If it is, it retrieves the Git status to identify modified, added, created, and renamed files.\n * It then filters this list to include only files with common code extensions (e.g., .js, .ts, .py)\n * and verifies that these files exist on the filesystem.\n *\n * This logic is implemented to identify relevant code changes within a Git repository,\n * which can be used for various purposes such as triggering code analysis, linting, or automated build processes\n * that need to operate only on the changed code.  The filtering by code extensions ensures that only relevant source code files\n * are considered, excluding non-code assets or configuration files from further processing in subsequent steps of the application.\n *\n * @returns {Promise<string[]>} A Promise that resolves to an array of strings, where each string is the absolute path to a modified code file.\n * Returns an empty array if the current directory is not a Git repository or if no modified code files are found.\n * Rejects the promise if there is an error during Git operations.\n */"
-  },
-  {
-    "file": "src/index.ts",
-    "line": 12,
-    "codeSnippet": "async function main(options: { interactive?: boolean, temperature?: number }) {...",
-    "suggestedComment": "```typescript\n/**\n * Main function to orchestrate the comment generation process.\n * This function serves as the entry point of the komments tool, automating the generation of code comment suggestions.\n * It first validates the API key to ensure access to the code analysis service. If the API key is invalid, it prompts the user to set it up, exiting if setup fails.\n * Next, it scans Git history to identify modified code files, focusing only on relevant changes for analysis. If no modified files are found, the process exits gracefully, as there is no code to comment.\n * The core logic then analyzes these modified files using a code analysis service (via `analyzeCode`), leveraging a temperature parameter to control the creativity of the suggestions.\n * The generated comment suggestions are then saved to a `komments.json` file for persistence and review.\n * Finally, if the `--interactive` option is provided, the function automatically applies these suggestions to the codebase"
-  },
-  {
-    "file": "src/suggestions.ts",
-    "line": 19,
-    "codeSnippet": "async function saveSuggestions(suggestions: CommentSuggestion[]): Promise<void> {...",
-    "suggestedComment": "/**\n * Saves an array of comment suggestions to a 'komments.json' file in the project's root directory.\n * This function persists comment suggestions to disk using synchronous file system operations.\n * This is implemented to store generated or collected comment suggestions for later use, such as review, editing, or batch processing, ensuring that suggestions are not lost between application runs.\n * The suggestions are serialized into JSON format for easy readability and compatibility with JavaScript/TypeScript applications.\n * The choice of synchronous `writeFileSync` is made for simplicity in this context, assuming that the operation is not expected to be"
-  },
-  {
-    "file": "src/suggestions.ts",
-    "line": 29,
-    "codeSnippet": "async function applySuggestions(suggestions: CommentSuggestion[]): Promise<void> {...",
-    "suggestedComment": "/**\n * Interactively reviews and applies comment suggestions to source code files.\n * This function presents each suggestion to the user in the command line, allowing them to choose to apply, skip, edit, or exit.\n * It is designed for scenarios where manual review of suggested comments is desired before modifying source files, providing a safety mechanism and user control over the comment application process.\n * The function iterates through each suggestion, displaying the file, line number, code snippet, and suggested comment to the user.\n * Using the 'inquirer' library, it prompts the user to select an action for each suggestion.\n * If the user chooses to 'apply' or 'edit', it calls the `applyCommentToFile` function (assumed to be defined elsewhere) to modify the source file with the chosen comment.\n * Error handling is included to catch potential issues during file modification, such as file access problems or write errors.\n * The interactive session can be exited at any point by selecting the 'exit' option.\n * @param suggestions An array of comment suggestions, each object should contain details like file path, line number, code snippet, and suggested comment.\n * @returns A Promise that resolves when the interactive session is completed or exited.\n */"
-  },
-  {
-    "file": "src/suggestions.ts",
-    "line": 96,
-    "codeSnippet": "async function applyCommentToFile(filePath: string, lineNumber: number, comment: string): Promise<void> {...",
-    "suggestedComment": "/**\n * Asynchronously applies a comment to a specific line in a file.\n * This function is designed to programmatically insert comments into code files, \n * supporting various file types and comment styles. It resolves file paths, \n * reads file content, determines the correct comment syntax based on the file extension using `getCommentStyle`, \n * formats the comment appropriately (handling single-line, multi-line, and block comments), \n * inserts it at the specified line number, and writes the modified content back to the file. \n * The purpose is to automate the process of adding comments for documentation, code review feedback, or other programmatic modifications.\n * It's crucial for tools that need to modify code files by adding contextual comments.\n * @param filePath - The path to the file to be commented. Can be an absolute path or relative to the project root.\n * @param lineNumber - The line number where the comment should be inserted (1-based index).\n * @param comment - The comment text to be inserted. Can be a single-line or multi-line string.\n * @returns A Promise that resolves when the comment has been successfully applied to the file.\n */"
-  },
-  {
-    "file": "src/suggestions.ts",
-    "line": 138,
-    "codeSnippet": "function getCommentStyle(extension: string): CommentStyle {...",
-    "suggestedComment": "/**\n * Gets the comment style (prefix and suffix) for a given file extension.\n * This function ensures that comments generated by the application are correctly formatted for different programming languages and file types.\n * It uses a predefined map of file extensions to their corresponding comment styles.\n * The logic defaults to single-line comments ('//') for unknown or unsupported file extensions as a common fallback.\n * Extension lookup is case-insensitive to handle variations in file extension casing.\n * @param extension The file extension string (e.g., '.js', '.py', '.html').\n * @returns An object of type CommentStyle, defining the 'prefix' and '"
+    "id": "gen-1742133521649",
+    "timestamp": "2025-03-16T13:58:41.649Z",
+    "suggestions": [
+      {
+        "file": "src/suggestions.ts",
+        "line": 46,
+        "codeSnippet": "async function saveSuggestions(suggestions: CommentSuggestion[]): Promise<void> {\r...",
+        "suggestedComment": "/**\n * saveSuggestions - Asynchronously handles savesuggestions operation\n * @param suggestions Parameter description\n * @returns {Promise} Promise that resolves when the operation completes\n */"
+      },
+      {
+        "file": "src/suggestions.ts",
+        "line": 107,
+        "codeSnippet": "async function applySuggestions(suggestions: CommentSuggestion[]): Promise<void> {\r...",
+        "suggestedComment": "/**\n * Asynchronously presents comment suggestions to the user in an interactive command-line interface, allowing them to review and apply, skip, edit, or exit.\n * This function is part of an interactive mode for a comment suggestion tool, providing a user-friendly way to control the application of automated comment suggestions before modifying source code.\n * It iterates through each suggestion, displaying the file, line, code snippet, and suggested comment.\n * Using `inquirer`, it prompts the user to choose an action: 'apply' to directly apply the suggestion, 'skip' to ignore it, 'edit' to modify the comment before applying, or 'exit' to stop the process.\n * If 'apply' or 'edit' is chosen, it calls the `applyCommentToFile` function to actually write the comment to the specified file and line.\n * 'edit' opens an editor for the user to refine the suggested comment before application.\n * Error handling is included for the `applyCommentToFile` operation, logging any failures to the console.\n * The function uses `chalk` for colored console output to enhance readability and user experience in the terminal.\n * @param suggestions An array of CommentSuggestion objects, each containing details about a suggested comment, including file path, line number, code snippet, and the suggested comment text.\n * @returns {Promise<void>} A Promise that resolves when the interactive session is completed, either after processing all suggestions or when the user chooses to exit.\n */"
+      },
+      {
+        "file": "src/suggestions.ts",
+        "line": 200,
+        "codeSnippet": "async function applyCommentToFile(filePath: string, lineNumber: number, comment: string): Promise<void> {\r...",
+        "suggestedComment": "/**\n * Asynchronously applies a formatted comment to a specific line in a file.\n * This function is designed to programmatically insert comments into code files, respecting the comment syntax of different file types.\n * It resolves the file path, reads the file content, determines the appropriate comment style based on the file extension using `getCommentStyle`,\n * formats the comment accordingly (handling single-line, multi-line, and block comments), inserts it at the specified line number, and writes the modified content back to the file.\n * This is useful for tools that automatically annotate code, such as linters or code generators, ensuring comments are syntactically correct for the target language.\n * @param filePath The path to the file to modify. Can be absolute or relative to the project root.\n * @param lineNumber The line number where the comment should be inserted (1-based index).\n * @param comment The comment string to insert.\n * @returns A Promise that resolves when the comment has been successfully applied to the file.\n */"
+      },
+      {
+        "file": "src/suggestions.ts",
+        "line": 256,
+        "codeSnippet": "function getCommentStyle(extension: string): CommentStyle {\r...",
+        "suggestedComment": "/**\n * Retrieves the comment style (prefix and suffix) for a given file extension.\n * This function is used to dynamically determine the correct comment syntax to apply when generating or manipulating code comments for different file types.\n * It uses a predefined map of file extensions to their corresponding comment styles.\n * The default comment style is single-line `//` which is applied if the extension is not found in the map, assuming it's a common code file type.\n * @param extension The file extension (e.g., '.js', '.py', '.html') as a string. Case-insensitive.\n * @returns An object of type CommentStyle containing the 'prefix' and 'suffix' strings for comments in the specified file type.\n */"
+      }
+    ]
   }
 ]

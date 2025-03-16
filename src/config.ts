@@ -29,7 +29,7 @@ async function validateApiKey(): Promise<boolean> {
 async function setupApiKey(): Promise<boolean> {
   console.log(chalk.yellow('Gemini API key not found.'));
   console.log(chalk.blue('You can get a free API key from Google AI Studio:'));
-  console.log(chalk.blue('https://makersuite.google.com/app/apikey'));
+  console.log(chalk.blue('https://aistudio.google.com/app/apikey'));
   
   const { apiKey } = await inquirer.prompt([{
     type: 'password',

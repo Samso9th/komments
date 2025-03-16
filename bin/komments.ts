@@ -60,10 +60,36 @@ program
   .description('AI-powered code commenting tool')
   .version('1.0.0')
   .option('-i, --interactive', 'Interactive mode to review and apply suggestions')
-  .option('-t, --temperature <number>', 'Temperature for AI generation (0.0-1.0)', parseFloat)
+  .option('-t, --temperature <number>', 'Temperature for AI generation (0.0-1.0)', parseFloat);
+
+// Default command - generate and save suggestions
+program
   .action(async (options) => {
     try {
       await main(options);
+    } catch (error: any) {
+      console.error(chalk.red(`Error: ${error.message}`));
+      process.exit(1);
+    }
+  });
+
+// Import command - import suggestions from a komments.json file
+program
+  .command('import')
+  .description('Import and apply comment suggestions from a komments.json file')
+  .option('-f, --file <path>', 'Path to the komments.json file')
+  .option('-i, --interactive', 'Interactive mode to review suggestions before applying', true)
+  .option('-a, --apply-all', 'Apply all suggestions without interactive review')
+  .action(async (options) => {
+    try {
+      // Import the importSuggestions function
+      const { importSuggestions } = require('../src/suggestions');
+      
+      // Determine if we should use interactive mode
+      const interactive = options.applyAll ? false : options.interactive;
+      
+      // Call the import function
+      await importSuggestions(options.file, interactive);
     } catch (error: any) {
       console.error(chalk.red(`Error: ${error.message}`));
       process.exit(1);
