@@ -21,6 +21,8 @@ npx komments
 - Interactive mode to review and apply suggestions
 - Support for multiple programming languages
 - Customizable AI temperature setting
+- Import and apply suggestions from saved files
+- Remove comments from codebase with interactive confirmation
 
 ## Setup
 
@@ -30,24 +32,37 @@ The API key will be saved to `.env.local` and `.env` files in your project root.
 
 ## Usage
 
+### Generate Comments
+
 ```bash
 # Basic usage - scans Git changes and saves suggestions to komments.json
 komments
-
-# Preview suggestions without saving
-komments --dry-run
 
 # Review and apply suggestions interactively
 komments --interactive
 
 # Control the creativity of AI suggestions (0.0-1.0)
 komments --temperature 0.5
+```
 
+### Import Suggestions
+
+```bash
 # Import and apply suggestions from a komments.json file
 komments import --file path/to/komments.json
 
 # Import and apply all suggestions without interactive review
 komments import --apply-all
+```
+
+### Remove Comments
+
+```bash
+# Remove all comments from the codebase (with interactive confirmation)
+komments remove-comments
+
+# Remove all comments without confirmation
+komments remove-comments --no-interactive
 ```
 
 ## Output
@@ -71,7 +86,9 @@ Suggestions are saved to `komments.json` in the following format:
 ]
 ```
 
-The new format supports multiple generations of suggestions, with each generation having a unique ID and timestamp. This allows you to track different sets of suggestions over time.
+The format supports multiple generations of suggestions, with each generation having a unique ID and timestamp. This allows you to track different sets of suggestions over time.
+
+Comment removal operations are also recorded in the `komments.json` file, providing a history of comment management activities.
 
 ## Supported Languages
 

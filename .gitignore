@@ -3,6 +3,7 @@
 # TypeScript
 node_modules/
 dist/
+test/
 docs.txt
 .npmrc
 # Environment files

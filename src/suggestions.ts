@@ -2,6 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import chalk from 'chalk';
 import inquirer from 'inquirer';
+import { escapeRegExp } from './utils';
 
 // Define interfaces
 interface CommentSuggestion {
@@ -16,6 +17,19 @@ interface SuggestionGeneration {
   timestamp: string;
   suggestions: CommentSuggestion[];
   codebaseInfo?: CodebaseInfo;
+  commentRemoval?: CommentRemovalOperation;
+}
+
+interface CommentRemovalOperation {
+  timestamp: string;
+  filesProcessed: string[];
+  commentsRemoved: number;
+  details: CommentRemovalDetail[];
+}
+
+interface CommentRemovalDetail {
+  file: string;
+  commentsRemoved: number;
 }
 
 interface CodebaseInfo {
@@ -24,31 +38,25 @@ interface CodebaseInfo {
   languages: string[]; // List of programming languages detected
 }
 
-/**
- * Saves comment suggestions to a JSON file as a new generation in an array
- * Each generation is stored with a unique identifier and timestamp
- * @param {Array} suggestions - Array of comment suggestions
- * @returns {Promise<void>}
- */
-// ```typescript
 // /**
-//  * Saves comment suggestions to a 'komments.json' file in the project root directory.
-//  * This function persists suggestions across application sessions by storing them as 'generations' in a JSON file.
-//  * Each generation represents a set of suggestions saved at a particular time and is identified by a timestamp-based ID.
-//  * The function handles existing 'komments.json' files, attempting to read and parse their content.
-//  * If the file exists but is in an older format (just an array of suggestions instead of an array of generations),
-//  * it automatically upgrades the format by wrapping the existing suggestions in a legacy generation object to maintain backward compatibility.
-//  * If reading or parsing the existing file fails, it logs a warning and starts with a fresh array of generations.
-//  * This approach ensures data persistence and allows tracking of suggestion history, which can be useful for debugging, auditing, or reviewing past suggestions.
+//  * Saves comment suggestions to a 'komments.json' file in the project root.
+//  * This function persists comment suggestions across different runs of the application.
+//  * It reads existing generations from the file, if present, handling potential legacy formats where the file might only contain a flat array of suggestions.
+//  * If a legacy format is detected, it wraps the existing suggestions into a new generation object.
+//  * A new 'generation' of suggestions is created for each invocation, including a timestamp and codebase information captured at the time of generation.
+//  * This allows for tracking and reviewing suggestions generated at different points in time and with different codebase states.
+//  * The updated list of generations, including the newly provided suggestions, is then written back to the 'komments.json' file.
 //  *
-//  * @param suggestions An array of CommentSuggestion objects to be saved as a new generation.
-//  * @returns A Promise that resolves when the suggestions have been successfully saved to the file.
-//  */
-// ```
+//  * @param suggestions An array of CommentSuggestion objects representing the suggestions to
 // /**
-//  * saveSuggestions - Asynchronously handles savesuggestions operation
-//  * @param suggestions Parameter description
-//  * @returns {Promise} Promise that resolves when the operation completes
+//  * Saves comment suggestions to a 'komments.json' file in the project root.
+//  * This function persists generated comment suggestions across sessions, allowing for review and later application.
+//  * It reads any existing 'komments.json' file to maintain previous suggestion generations.
+//  * If the file exists and is in an older format (just an array of suggestions), it migrates it to the new format.
+//  * Each save operation creates a new "generation" with a unique ID (timestamp-based) and includes codebase information captured at the time of saving.
+//  * This allows for tracking suggestions over time and contextualizing them with codebase snapshots.
+//  * @param suggestions An array of comment suggestions to be saved in the new generation.
+//  * @returns A Promise that resolves when the suggestions are successfully saved to 'komments.json'.
 //  */
 async function saveSuggestions(suggestions: CommentSuggestion[]): Promise<void> {
   const outputPath = path.join(process.cwd(), 'komments.json');
@@ -105,6 +113,26 @@ async function saveSuggestions(suggestions: CommentSuggestion[]): Promise<void> 
 //  * This function guides the user through each suggested comment, prompting them to apply, skip, edit, or exit.
 //  * It is designed for interactive mode in the comment generation process, allowing developers to manually review and approve AI-generated comments before they are written to source files.
 //  * This ensures quality control and prevents unintended changes to the codebase.
+// /**
+//  * Presents comment suggestions to the user in an interactive command-line interface for review and application.
+//  * For each suggestion, the user is prompted to apply, skip, edit, or exit the interactive session.
+//  * This interactive mode is designed to ensure user oversight and refinement of automatically generated comments before they are applied to source code, promoting code quality and accurate documentation.
+//  * @param suggestions An array of comment suggestions, each containing details like file path, line number, code snippet, and the suggested comment text.
+//  * @returns {Promise<void>} A Promise that resolves when the interactive review session is completed.
+//  */
+// /**
+//  * Asynchronously presents an interactive command-line interface to review and apply suggested comments to code files.
+//  * This function is designed for interactive comment application, allowing users to examine each suggested comment,
+//  * preview the code context, and decide whether to apply the comment, skip it, edit it before applying, or exit the interactive session.
+//  * It iterates through an array of `CommentSuggestion` objects, each containing details about a suggested comment,
+//  * and uses `inquirer` to prompt the user for an action for each suggestion.
+//  * The purpose is to provide a user-friendly way to manually review and control the application of automatically generated comments,
+//  * ensuring accuracy and relevance before modifying source code files. This is particularly useful in workflows where
+//  * automated comment generation is used but human oversight is desired for quality assurance.
+//  *
+//  * @param suggestions An array of `CommentSuggestion` objects, each representing a suggested comment and its context (file, line, code snippet).
+//  * @returns A Promise that resolves when the interactive session is completed or exited.
+//  */
 //  * The interactive prompt uses `inquirer` to provide a user-friendly experience for reviewing and managing comment suggestions.
 //  *
 //  * @param suggestions - An array of CommentSuggestion objects, each containing details about a suggested comment including the file, line number, code snippet, and the suggested comment text.
@@ -191,6 +219,24 @@ async function applySuggestions(suggestions: CommentSuggestion[]): Promise<void>
 //  * @param lineNumber The line number where the comment should be inserted (1-based index).
 //  * @param comment The comment string to be inserted. Can be a single-line or multi-line string.
 //  * @returns {Promise<void>} A Promise that resolves when the comment has been successfully applied to the file.
+// /**
+//  * Asynchronously applies a formatted comment to a specific line in a file.
+//  * This function is designed to programmatically insert comments into code files, adapting to different file types by using the appropriate comment syntax.
+//  * It resolves file paths, reads file content, determines comment style based on file extension using `getCommentStyle`, formats the comment, inserts it at the specified line, and writes the changes back to the file.
+//  * The purpose is to automate the process of adding comments to files, ensuring correct syntax for various programming languages and file formats.
+// /**
+//  * applyCommentToFile - Asynchronously handles applycommenttofile operation
+//  * @param filePath Parameter description
+//  * @param lineNumber Parameter description
+//  * @param comment Parameter description
+//  * @returns {Promise} Promise that resolves when the operation completes
+//  */
+//  * This is useful in scenarios like code generation, automated documentation, or adding annotations to code.
+//  * @param filePath The path to the file to be modified. Can be absolute or relative to the project root.
+//  * @param lineNumber The line number where the comment should be inserted (1-based index).
+//  * @param comment The comment string to be inserted. The function will handle formatting this comment based on the file type.
+//  * @returns A Promise that resolves when the comment has been successfully applied to the file.
+//  */
 //  */
 // ```
         console.error(chalk.red(`Error applying comment: ${error.message}`));
@@ -218,25 +264,39 @@ async function applyCommentToFile(filePath: string, lineNumber: number, comment:
   
   // Determine the appropriate comment style based on file extension
   const extension = path.extname(resolvedPath).toLowerCase();
-// /**
-//  * getCommentStyle handles getcommentstyle operation
-//  * @param extension Parameter description
-//  */
   const { prefix, suffix } = getCommentStyle(extension);
   
   // Format the comment
-// /**
-//  * Retrieves the appropriate comment style (prefix and suffix) based on the provided file extension.
-//  * This function is used to dynamically determine the correct syntax for commenting code in different programming languages.
-//  * It supports a predefined set of common file extensions and their corresponding comment styles.
-//  * If an extension is not found in the predefined styles, it defaults to a single-line comment style ('//').
-//  * This is crucial for features that need to generate or manipulate code comments across various languages, ensuring correct syntax and avoiding parsing errors.
-//  * @param extension The file extension (e.g., '.js', '.py', '.html') as a string. Case-insensitive.
-//  * @returns An object of type CommentStyle, containing 'prefix' and 'suffix' properties representing the comment syntax for the given extension.
-//  * For example, for '.js', it returns { prefix: '//', suffix: '' }, and for '.html', it returns { prefix: '<!--', suffix: '-->' }.
-//  */
   let formattedComment: string;
-  if (suffix) {
+  
+  // Check if the comment appears to be a JSDoc comment (contains @param, @returns, etc.)
+  const isJSDocComment = (
+    (extension === '.js' || extension === '.jsx' || extension === '.ts' || extension === '.tsx') &&
+    (comment.includes('@param') || comment.includes('@return') || comment.includes('@returns') || 
+     comment.includes('@description') || comment.includes('@example') || comment.includes('@typedef') ||
+     comment.includes('@type') || comment.includes('@function') || comment.includes('@class'))
+  );
+  
+  if (isJSDocComment) {
+    // Format as proper JSDoc comment
+    if (comment.startsWith('/**') && comment.endsWith('*/')) {
+      // Comment is already properly formatted
+      formattedComment = comment;
+    } else {
+      // Format as JSDoc comment
+      const commentLines = comment.split('\n');
+      formattedComment = '/**\n';
+      for (const line of commentLines) {
+        // Remove any existing comment prefixes
+        let cleanLine = line.trim();
+        if (cleanLine.startsWith('//') || cleanLine.startsWith('*') || cleanLine.startsWith('/*')) {
+          cleanLine = cleanLine.replace(/^\/\/|^\*|^\/\*/, '').trim();
+        }
+        formattedComment += ` * ${cleanLine}\n`;
+      }
+      formattedComment += ' */';
+    }
+  } else if (suffix) {
     // For languages with block comments
     formattedComment = `${prefix} ${comment} ${suffix}`;
   } else if (comment.includes('\n')) {
@@ -258,6 +318,52 @@ interface CommentStyle {
   prefix: string;
   suffix: string;
 }
+// /**
+//  * Retrieves the comment style (prefix and suffix) based on the provided file extension.
+//  * This function is used to determine the correct comment syntax for different programming languages when programmatically generating or manipulating code.
+//  * It relies on a predefined mapping of file extensions to their corresponding comment styles.
+//  * This ensures that comments added to files are syntactically correct for the target language, improving code readability and maintainability.
+//  * If the provided extension is not found in the mapping, it defaults to single-line JavaScript-style comments ('//') as a common and widely compatible fallback.
+//  * The extension lookup is case-insensitive to handle variations in file extension casing.
+//  * @param extension The file extension string (e.g., '.js', '.py', '.html'). Case-insensitive.
+//  * @returns An object of type CommentStyle containing the 'prefix' and 'suffix' strings for comments.
+//  */
+// ```typescript
+// /**
+//  * Imports comment suggestions from a komments.json file and applies them to the codebase.
+//  * This function facilitates the integration of pre-generated AI comment suggestions into the project.
+//  * It supports two formats for the komments.json file: an older format containing a direct array of suggestions,
+//  * and a newer format which is an array of "generations," each containing an array of suggestions and optional codebase information.
+//  * The function defaults to applying suggestions interactively, prompting the user before applying each suggestion.
+//  * Alternatively, it can apply all suggestions non-interactively.
+//  *
+//  * Design Rationale:
+//  * This function allows for offline or pre-computed comment suggestions to be easily imported and applied,
+//  * enabling workflows where comment generation happens separately from the application process.
+//  * Supporting both formats ensures backward compatibility with older versions of comment generation tools,
+//  * while the newer format allows for future expansion, such as including codebase context for potentially smarter comment application logic.
+//  *
+//  * Business Context:
+//  * Streamlines the process of integrating AI-generated comments into the codebase, improving developer productivity and code documentation consistency.
+//  * Allows for batch processing of comment suggestions and review before application.
+//  *
+//  * @param filePath - Optional path to the komments.json file. If not provided, defaults to 'komments.json' in the current working directory.
+//  * @param interactive - Optional boolean indicating whether to apply suggestions interactively (prompting user). Defaults to true.
+// /**
+//  * Asynchronously imports comment suggestions from a JSON file and applies them to the codebase.
+//  * This function facilitates the integration of pre-generated or externally sourced comment suggestions into the project.
+//  * It reads suggestions from a JSON file, which can be either a specified file path or defaults to 'komments.json' in the current working directory.
+//  * The JSON file can be in two formats: an older format with a direct array of suggestions, or a newer format with an array of generations, where the latest generation's suggestions are used.
+//  * In interactive mode (default), it leverages the `applySuggestions` function (assumed to handle user prompts and selective application).
+//  * In non-interactive mode, it automatically applies all suggestions using `applyCommentToFile` for each suggestion.
+//  * This process is designed to streamline the incorporation of suggested comments, potentially generated by automated analysis or external tools, into the codebase, enhancing documentation and code clarity.
+//  * @param filePath Optional path to the JSON file containing comment suggestions. If not provided, defaults to 'komments.json' in the current working directory.
+//  * @param interactive Boolean flag to enable interactive mode, prompting the user for confirmation before applying suggestions. Defaults to true.
+//  * @returns A Promise that resolves to void when the import and application process is complete.
+//  */
+//  * @returns A Promise that resolves when the suggestions have been processed (either interactively or non-interactively) or rejects if an error occurs during file reading, parsing, or application. Returns void on successful completion.
+//  */
+// ```
 
 /**
  * Gets the appropriate comment style for a file extension
@@ -289,6 +395,7 @@ function getCommentStyle(extension: string): CommentStyle {
   return commentStyles[key as keyof typeof commentStyles] || { prefix: '//', suffix: '' };
 }
 
+
 /**
  * Imports and applies comment suggestions from a komments.json file
  * @param {string} filePath - Path to the komments.json file (optional, defaults to komments.json in current directory)
@@ -301,6 +408,20 @@ async function importSuggestions(filePath?: string, interactive: boolean = true)
   if (!fs.existsSync(inputPath)) {
     console.error(chalk.red(`Error: File ${inputPath} does not exist.`));
     return;
+// ```typescript
+// /**
+//  * Asynchronously removes comments from source code files. This function is designed to prepare code for distribution or reduce codebase size by eliminating unnecessary comments.
+//  * It operates in two modes: either on a specified list of files or by scanning the entire codebase if no file paths are provided.
+//  * In interactive mode (enabled by default), it prompts the user for confirmation before proceeding with the irreversible comment removal.
+//  * This is a destructive operation, meaning comments are permanently removed from the files. It's crucial to ensure proper backups or version control before running this function.
+//  * The function handles different file types by detecting the appropriate comment styles based on file extensions.
+//  * It logs detailed information about the process, including the number of comments removed from each file and any errors encountered.
+//  * Finally, it saves a record of the comment removal operation to `komments.json` for auditing and tracking purposes.
+//  * @param filePaths An optional array of file paths to process. If not provided or empty, the function will scan the entire codebase for files.
+//  * @param interactive A boolean indicating whether to run in interactive mode, prompting for user confirmation before removing comments. Defaults to true.
+//  * @returns A Promise that resolves to a CommentRemovalOperation object, containing details about the operation such as timestamp, files processed, comments removed, and per-file details.
+//  */
+// ```
   }
   
   try {
@@ -310,6 +431,12 @@ async function importSuggestions(filePath?: string, interactive: boolean = true)
     // Handle both new format (array of generations) and old format (array of suggestions)
     let suggestions: CommentSuggestion[] = [];
     
+// /**
+//  * removeComments - Asynchronously handles removecomments operation
+//  * @param filePaths? Parameter description
+//  * @param interactive Parameter description
+//  * @returns {Promise} Promise that resolves when the operation completes
+//  */
     if (Array.isArray(data)) {
       if (data.length > 0 && data[0].suggestions) {
         // New format - array of generations
@@ -356,10 +483,307 @@ async function importSuggestions(filePath?: string, interactive: boolean = true)
   }
 }
 
+/**
+ * Removes comments from files in the codebase and logs the operation
+ * @param {string[]} filePaths - Array of file paths to process (or empty to scan the entire codebase)
+ * @param {boolean} interactive - Whether to prompt for confirmation before removing comments
+ * @returns {Promise<CommentRemovalOperation>} Details about the comment removal operation
+ */
+async function removeComments(filePaths?: string[], interactive: boolean = true): Promise<CommentRemovalOperation> {
+  console.log(chalk.blue('\nComment removal mode: This will remove comments from your source files.'));
+  console.log(chalk.yellow('This operation cannot be undone.\n'));
+  
+  // If no specific files are provided, scan the entire codebase
+  if (!filePaths || filePaths.length === 0) {
+    filePaths = scanCodebase();
+  }
+  
+  if (filePaths.length === 0) {
+    console.log(chalk.yellow('No code files found to process. Exiting.'));
+    return {
+      timestamp: new Date().toISOString(),
+      filesProcessed: [],
+      commentsRemoved: 0,
+      details: []
+    };
+  }
+  
+  console.log(chalk.green(`Found ${filePaths.length} files to process.`));
+  
+  // If interactive mode is enabled, ask for confirmation
+  if (interactive) {
+    const { confirm } = await inquirer.prompt([{
+      type: 'confirm',
+      name: 'confirm',
+      message: 'Are you sure you want to remove all comments from these files?',
+      default: false
+    }]);
+    
+    if (!confirm) {
+      console.log(chalk.yellow('Operation cancelled.'));
+      return {
+// /**
+//  * removeCommentsFromContent handles removecommentsfromcontent operation
+//  * @param content Parameter description
+//  * @param extension Parameter description
+//  * @param prefix Parameter description
+//  * @param suffix Parameter description
+//  */
+        timestamp: new Date().toISOString(),
+        filesProcessed: [],
+        commentsRemoved: 0,
+        details: []
+      };
+    }
+  }
+  
+  // Process each file
+  const details: CommentRemovalDetail[] = [];
+  let totalCommentsRemoved = 0;
+  
+  for (const filePath of filePaths) {
+    try {
+      // Resolve the file path relative to the project root if it's not absolute
+      const resolvedPath = path.isAbsolute(filePath) ? filePath : path.join(process.cwd(), filePath);
+      
+      // Skip files that don't exist
+      if (!fs.existsSync(resolvedPath)) {
+        console.log(chalk.yellow(`File not found: ${filePath}`));
+        continue;
+      }
+// /**
+//  * removeCommentsFromContent handles removecommentsfromcontent operation
+//  * @param content Parameter description
+//  * @param extension Parameter description
+//  * @param prefix Parameter description
+//  * @param suffix Parameter description
+//  */
+      
+      // Read the file content
+      const fileContent = fs.readFileSync(resolvedPath, 'utf8');
+      
+      // Get the file extension and comment style
+      const extension = path.extname(resolvedPath).toLowerCase();
+      const { prefix, suffix } = getCommentStyle(extension);
+      
+      // Remove comments from the file
+      const { content: newContent, count } = removeCommentsFromContent(fileContent, extension, prefix, suffix);
+      
+      // Only write back if comments were removed
+      if (count > 0) {
+        fs.writeFileSync(resolvedPath, newContent);
+        console.log(chalk.green(`Removed ${count} comments from ${filePath}`));
+// ```typescript
+// /**
+//  * Recursively scans the codebase starting from the current working directory to identify files that are likely to contain code comments.
+//  * This function is designed to locate relevant source code files for further processing, such as documentation generation or code analysis.
+//  * It traverses the
+        
+        details.push({
+          file: filePath,
+          commentsRemoved: count
+        });
+        
+        totalCommentsRemoved += count;
+      } else {
+        console.log(chalk.blue(`No comments found in ${filePath}`));
+      }
+    } catch (error: any) {
+      console.error(chalk.red(`Error processing ${filePath}: ${error.message}`));
+    }
+  }
+  
+  // Create the comment removal operation record
+  const commentRemovalOperation: CommentRemovalOperation = {
+// /**
+//  * Scans the codebase starting from the current working directory to identify files that potentially contain comments.
+//  * This function is crucial for tools that analyze or extract comments from source code, such as documentation generators or code quality checkers.
+//  * It recursively traverses directories, excluding 'node_modules' and hidden directories (starting with '.'), to improve performance and focus on project-specific code.
+//  * Only files with extensions for which comment styles are defined (determined by `getCommentStyle`) are included, ensuring that only relevant source code files are processed and avoiding unnecessary scanning of irrelevant file types.
+//  * @returns string[] - An array of strings, where each string is the absolute path to a file within the codebase that is expected to contain comments.
+//  */
+    timestamp: new Date().toISOString(),
+    filesProcessed: filePaths,
+    commentsRemoved: totalCommentsRemoved,
+    details: details
+  };
+  
+  // Save the operation to komments.json
+  await saveCommentRemovalOperation(commentRemovalOperation);
+  
+  console.log(chalk.green(`\nComment removal completed. Removed ${totalCommentsRemoved} comments from ${details.length} files.`));
+  return commentRemovalOperation;
+}
+
+/**
+ * Removes comments from a string of code content
+ * @param {string} content - The file content
+ * @param {string} extension - File extension
+ * @param {string} prefix - Comment prefix
+ * @param {string} suffix - Comment suffix
+ * @returns {{content: string, count: number}} Modified content and number of comments removed
+ */
+function removeCommentsFromContent(content: string, extension: string, prefix: string, suffix: string): { content: string, count: number } {
+  let count = 0;
+  let newContent = content;
+  
+  // Escape special characters in prefix and suffix for regex
+  const escPrefix = escapeRegExp(prefix);
+  const escSuffix = suffix ? escapeRegExp(suffix) : '';
+  
+  if (suffix) {
+    // Handle block comments (/* ... */)
+    const blockCommentRegex = new RegExp(`${escPrefix}[\\s\\S]*?${escSuffix}`, 'g');
+    newContent = newContent.replace(blockCommentRegex, (match) => {
+      count++;
+      return '';
+    });
+  } else {
+    // Handle line comments (// or #)
+// /**
+//  * saveCommentRemovalOperation - Asynchronously handles savecommentremovaloperation operation
+//  * @param operation Parameter description
+//  * @returns {Promise} Promise that resolves when the operation completes
+//  */
+    const lineCommentRegex = new RegExp(`${escPrefix}.*?$`, 'gm');
+    newContent = newContent.replace(lineCommentRegex, (match) => {
+      count++;
+      return '';
+    });
+  }
+  
+  // Special handling for specific languages
+  if (extension === '.js' || extension === '.jsx' || extension === '.ts' || extension === '.tsx') {
+    // Handle JS/TS block comments
+    const jsBlockCommentRegex = /\/\*[\s\S]*?\*\//g;
+    newContent = newContent.replace(jsBlockCommentRegex, (match) => {
+      count++;
+      return '';
+    });
+  }
+  
+  // Clean up empty lines created by comment removal
+  newContent = newContent.replace(/\n\s*\n\s*\n/g, '\n\n');
+  
+  return { content: newContent, count };
+}
+
+/**
+ * Scans the codebase for code files
+ * @returns {string[]} Array of file paths
+ */
+function scanCodebase(): string[] {
+  const cwd = process.cwd();
+// /**
+//  * collectCodebaseInfo handles collectcodebaseinfo operation
+//  */
+  const filePaths: string[] = [];
+  
+  // Function to recursively scan directories
+  function scanDir(dirPath: string) {
+    try {
+      const entries = fs.readdirSync(dirPath, { withFileTypes: true });
+      
+      for (const entry of entries) {
+        const fullPath = path.join(dirPath, entry.name);
+        
+        // Skip node_modules and hidden directories
+        if (entry.isDirectory()) {
+          if (entry.name === 'node_modules' || entry.name.startsWith('.')) {
+            continue;
+          }
+          scanDir(fullPath);
+        } else if (entry.isFile()) {
+          const ext = path.extname(entry.name).toLowerCase();
+          // Only include files with extensions that can have comments
+          if (ext && Object.keys(getCommentStyle(ext)).length > 0) {
+            filePaths.push(fullPath);
+          }
+        }
+      }
+// /**
+//  * Collects information about the codebase in the current working directory.
+//  * This function analyzes the files in the current directory and its subdirectories to determine the file types and programming languages used.
+//  * It's designed to provide a high-level overview of the project's composition by scanning the file system, counting files by extension, and identifying associated programming languages.
+//  * The logic skips 'node_modules' directories and hidden directories (starting with '.') to focus analysis on project source code and avoid processing dependency files or configuration directories.
+//  * Error handling is implemented to gracefully continue scanning even if some directories cannot be read,
+    } catch (error) {
+      // Silently continue if we can't read a directory
+    }
+  }
+  
+  // Start scanning from current directory
+  scanDir(cwd);
+  
+  return filePaths;
+}
+
+/**
+ * Saves the comment removal operation to komments.json
+ * @param {CommentRemovalOperation} operation - The comment removal operation details
+ * @returns {Promise<void>}
+ */
+async function saveCommentRemovalOperation(operation: CommentRemovalOperation): Promise<void> {
+  const outputPath = path.join(process.cwd(), 'komments.json');
+  let generations: SuggestionGeneration[] = [];
+  
+  // Read existing file if it exists
+  if (fs.existsSync(outputPath)) {
+    try {
+      const fileContent = fs.readFileSync(outputPath, 'utf8');
+      generations = JSON.parse(fileContent);
+      
+      // Ensure the content is an array
+      if (!Array.isArray(generations)) {
+// /**
+//  * Retrieves the programming language name based on the provided file extension.
+//  * This function is used to identify the programming language of a file based on its extension, enabling features like syntax highlighting and language-specific code analysis within the application.
+//  * It utilizes a predefined mapping of common file extensions to their corresponding language names for efficient lookup.
+//  * The lookup is case-insensitive, ensuring that extensions like '.JS' and '.js' are treated the same.
+//  * If the provided extension is not found in the mapping, it returns null indicating an unknown or unsupported language.
+//  * @param extension The file extension (e.g., '.js', '.py', '.tsx') to identify the language for.
+//  * @returns The name of the programming language as a string (e.g., 'JavaScript', 'Python', 'TypeScript (React)') or null if the extension is not recognized.
+//  */
+        generations = [];
+      }
+    } catch (error) {
+      console.error(chalk.yellow('Error reading existing komments.json, creating new file'));
+      generations = [];
+    }
+  }
+  
+  // If there are existing generations, add the comment removal operation to the latest one
+  if (generations.length > 0) {
+    const latestGeneration = generations[generations.length - 1];
+    latestGeneration.commentRemoval = operation;
+// /**
+//  * Determines the programming language based on the provided file extension.
+//  * This function is used to infer the programming language of a file, primarily for features like syntax highlighting or language-specific code processing in applications such as code editors or file viewers.
+//  * It utilizes a `Record` for efficient lookup of language names based on file extensions. The lookup is case-insensitive by converting the input extension to lowercase to ensure consistent matching regardless of the input case.
+//  * @param extension The file extension string (e.g., ".js", ".PY", ".Tsx").
+//  * @returns The programming language name as a string (e.g., "JavaScript", "Python", "TypeScript (React)") if a match is found in the internal language map, otherwise returns null if the extension is not recognized.
+//  */
+  } else {
+    // If no generations exist, create a new one with just the comment removal operation
+    const newGeneration: SuggestionGeneration = {
+      id: `gen-${new Date().getTime()}`,
+      timestamp: new Date().toISOString(),
+      suggestions: [],
+      commentRemoval: operation
+    };
+    generations.push(newGeneration);
+  }
+  
+  // Write the updated generations back to the file
+  fs.writeFileSync(outputPath, JSON.stringify(generations, null, 2));
+  console.log(chalk.blue('Comment removal operation saved to komments.json'));
+}
+
 export {
   saveSuggestions,
   applySuggestions,
-  importSuggestions
+  importSuggestions,
+  removeComments
 };
 
 

@@ -58,5 +58,522 @@
         "suggestedComment": "/**\n * Retrieves the comment style (prefix and suffix) for a given file extension.\n * This function is used to dynamically determine the correct comment syntax to apply when generating or manipulating code comments for different file types.\n * It uses a predefined map of file extensions to their corresponding comment styles.\n * The default comment style is single-line `//` which is applied if the extension is not found in the map, assuming it's a common code file type.\n * @param extension The file extension (e.g., '.js', '.py', '.html') as a string. Case-insensitive.\n * @returns An object of type CommentStyle containing the 'prefix' and 'suffix' strings for comments in the specified file type.\n */"
       }
     ]
+  },
+  {
+    "id": "gen-1742143376690",
+    "timestamp": "2025-03-16T16:42:56.690Z",
+    "suggestions": [
+      {
+        "file": "src/index.ts",
+        "line": 12,
+        "codeSnippet": "async function main(options: { interactive?: boolean, temperature?: number }) {\r...",
+        "suggestedComment": "```typescript\n/**\n * Orchestrates the main workflow of the komments tool: validating API key, scanning Git changes,\n * analyzing modified code to generate comment suggestions, saving suggestions to a file,\n * and optionally applying suggestions in interactive mode.\n *\n * This function serves as the entry point for the komments tool. It ensures that the tool is properly\n * configured (API key validated) and then proceeds to identify code modifications using Git.\n * By focusing on modified files, the tool efficiently targets areas of the codebase where comments are most likely needed.\n * The temperature parameter allows users to control the creativity/randomness of the AI model used for code analysis.\n * Saving suggestions to 'komments.json' provides a persistent record of the tool's output and enables non-interactive usage.\n * Interactive mode offers a streamlined experience for users who want to quickly apply the suggested comments.\n *\n * @param {object} options - An object containing optional configuration parameters.\n * @param {boolean} [options.interactive=false] - Enables interactive mode, prompting the user to apply suggestions.\n *                                        Defaults to false, in which case suggestions are only saved to komments.json.\n * @param {number} [options.temperature=0.7] - Controls the 'temperature' parameter for the code analysis AI model,\n *                                         influencing the randomness and creativity of the generated suggestions.\n *                                         A higher temperature (e.g., closer to 1) results in more creative but potentially\n *                                         less consistent suggestions, while a lower temperature (e.g., closer to 0) yields\n *                                         more deterministic and focused suggestions. Defaults to 0.7.\n * @returns {Promise<void"
+      },
+      {
+        "file": "src/index.ts",
+        "line": 54,
+        "codeSnippet": "async function handleRemoveComments(options: { interactive?: boolean }) {\r...",
+        "suggestedComment": "/**\n * handleRemoveComments - Asynchronously handles handleremovecomments operation\n * @param options Parameter description\n * @returns {Promise} Promise that resolves when the operation completes\n */"
+      },
+      {
+        "file": "src/suggestions.ts",
+        "line": 41,
+        "codeSnippet": "async function saveSuggestions(suggestions: CommentSuggestion[]): Promise<void> {\r...",
+        "suggestedComment": "/**\n * Saves comment suggestions to a JSON file (komments.json) in the project root.\n * This function persists comment suggestions across different runs of the application.\n * It reads any existing 'komments.json' file to append new suggestions to previous generations,\n * handling cases where the file might not exist or has an older format.\n *\n * Design Rationale:\n * - Persistence: Stores suggestions in a file for review, comparison across runs, and potential later processing.\n * - Legacy Format Handling:  Gracefully handles older versions of 'komments.json' where the file might just contain an array of suggestions directly,\n *   converting it to the new format (array of `SuggestionGeneration` objects) to maintain backward compatibility and data integrity.\n * - Codebase Context: Includes `codebaseInfo` in each generation to provide context about the codebase state at the time of suggestion generation,\n *   which can be useful for analysis and comparison of suggestions across different code versions.\n * - Error Handling: Includes basic error handling for file reading to prevent crashes if 'komments.json' is corrupted or inaccessible,\n *   logging a warning and proceeding with creating a new file.\n *\n * @param suggestions An array of comment suggestions to be saved. Each suggestion is of type `CommentSuggestion`.\n * @returns A Promise that resolves when the suggestions are successfully saved to 'komments.json'. Returns a Promise<void> as it performs an asynchronous file write operation and does not return a value.\n */"
+      },
+      {
+        "file": "src/suggestions.ts",
+        "line": 106,
+        "codeSnippet": "async function applySuggestions(suggestions: CommentSuggestion[]): Promise<void> {\r...",
+        "suggestedComment": "/**\n * applySuggestions - Asynchronously handles applysuggestions operation\n * @param suggestions Parameter description\n * @returns {Promise} Promise that resolves when the operation completes\n */"
+      },
+      {
+        "file": "src/suggestions.ts",
+        "line": 199,
+        "codeSnippet": "async function applyCommentToFile(filePath: string, lineNumber: number, comment: string): Promise<void> {\r...",
+        "suggestedComment": "/**\n * applyCommentToFile - Asynchronously handles applycommenttofile operation\n * @param filePath Parameter description\n * @param lineNumber Parameter description\n * @param comment Parameter description\n * @returns {Promise} Promise that resolves when the operation completes\n */"
+      },
+      {
+        "file": "src/suggestions.ts",
+        "line": 255,
+        "codeSnippet": "function getCommentStyle(extension: string): CommentStyle {\r...",
+        "suggestedComment": "/**\n * Dynamically determines the appropriate comment style (prefix and suffix) based on the file extension.\n * This is crucial for ensuring code comments are correctly formatted when generating"
+      },
+      {
+        "file": "src/suggestions.ts",
+        "line": 286,
+        "codeSnippet": "async function importSuggestions(filePath?: string, interactive: boolean = true): Promise<void> {\r...",
+        "suggestedComment": "/**\n * Imports comment suggestions from a JSON file (komments.json by default) and applies them to the codebase.\n * This function is designed to streamline the process of applying AI-generated comment suggestions,\n * typically produced by a separate comment generation tool. It supports two formats of the JSON file:\n * a newer format with an array of 'generations' (each containing suggestions and optional codebase info),\n * and an older format with a direct array of comment suggestions. The function defaults to interactive mode,\n * allowing users to review and confirm each suggestion before application. Non-interactive mode applies all suggestions automatically.\n *\n * @param filePath - Optional path to the JSON file containing comment suggestions. Defaults to 'komments.json' in the current working directory if not provided.\n * @param interactive -  Boolean flag to determine if suggestions should be applied interactively (true) or automatically (false). Defaults to true.\n * @returns A Promise that resolves when all suggestions are processed and applied (or skipped in interactive mode). Returns void.\n */"
+      },
+      {
+        "file": "src/suggestions.ts",
+        "line": 353,
+        "codeSnippet": "async function removeComments(filePaths?: string[], interactive: boolean = true): Promise<CommentRemovalOperation> {\r...",
+        "suggestedComment": "```typescript\n/**\n * Asynchronously removes comments from source code files.\n * This function is designed to clean up code by stripping out comments, potentially for deployment or distribution, reducing file sizes and removing developer-specific notes.\n * It offers an interactive mode for user confirmation before performing the irreversible operation of comment removal, and handles cases where no file paths are provided by scanning the entire codebase.\n *\n * Design rationale includes:\n * - **Safety:** Interactive mode prevents accidental comment removal.\n * - **Flexibility:** Accepts specific file paths or scans the entire project.\n * - **Robustness:** Handles file not found errors and logs details of each file processed.\n * - **Persistence:** Saves a record of the comment removal operation for auditing or tracking purposes.\n *\n * @async\n * @param filePaths An optional array of file paths to process. If not provided, the function scans the entire codebase for eligible files using `scanCodebase()`.\n * @param interactive A boolean indicating whether to prompt the user for confirmation before removing comments. Defaults to `true`. Set to `false` for non-interactive execution.\n * @returns A Promise that resolves to a `CommentRemovalOperation` object, which contains a timestamp of the operation, a list of files processed, the total number of comments removed, and detailed information about each processed file. Returns a Promise.\n */\n```"
+      },
+      {
+        "file": "src/suggestions.ts",
+        "line": 461,
+        "codeSnippet": "function removeCommentsFromContent(content: string, extension: string, prefix: string, suffix: string): { content: string, count: number } {\r...",
+        "suggestedComment": "```typescript\n/**\n * Removes comments from the provided content string based on specified comment prefixes and suffixes.\n * This function is designed to sanitize or process text-based content, particularly code, by eliminating comment sections.\n * It supports both line comments and block comments, identified by a customizable prefix and an optional suffix.\n * The logic handles different comment styles based on whether a suffix is provided.\n * If a suffix is provided, it's treated as block comments (e.g., /* ... */), otherwise as line comments (e.g., // or #).\n * Special handling is included for JavaScript/TypeScript files to ensure standard JS block comments (/* ... */) are removed regardless of the provided prefix/suffix, addressing a common comment style in these languages.\n * After comment removal, it cleans up excessive empty lines introduced by removing multi-line comments, ensuring a cleaner output.\n * @param content The string content from which to remove comments.\n * @param extension The file extension of the content, used for language-specific comment handling (e.g., '.js', '.ts').\n * @param prefix The prefix that denotes the start of a comment (e.g., '//', '#', '/*').\n * @param suffix An optional suffix that denotes the end of a block comment (e.g., '*/'). If provided, block comments are handled; otherwise, line comments are assumed.\n * @returns An object containing the content with comments removed and a count of the comments removed. Returns a Promise<{ content: string, count: number }> if this were an async function.\n */\n```"
+      },
+      {
+        "file": "src/suggestions.ts",
+        "line": 505,
+        "codeSnippet": "function scanCodebase(): string[] {\r...",
+        "suggestedComment": "/**\n * scanCodebase handles scancodebase operation\n */"
+      },
+      {
+        "file": "src/suggestions.ts",
+        "line": 547,
+        "codeSnippet": "async function saveCommentRemovalOperation(operation: CommentRemovalOperation): Promise<void> {\r...",
+        "suggestedComment": "/**\n * Saves a comment removal operation to the 'komments.json' file.\n * This function persists comment removal actions, associating them with suggestion generations for tracking and potential future use, such as re-evaluation of suggestions based on removed comments.\n * 'komments.json' stores an array of 'SuggestionGeneration' objects, each representing a generation of suggestions and optionally including a 'commentRemoval' operation.\n *\n * The function reads the existing 'komments.json' file if it exists, parses its content as JSON, and ensures it's an array of suggestions.\n * If the file doesn't exist or parsing fails, a new empty array of generations is initialized.\n *\n * If existing generations are loaded, the provided comment removal operation is added to the most recent 'SuggestionGeneration'.\n * If no generations exist, a new 'SuggestionGeneration' is created with the current timestamp and the provided operation.\n *\n * Finally, the updated array of generations is written back to 'komments"
+      },
+      {
+        "file": "test/example.js",
+        "line": 3,
+        "codeSnippet": "function calculateTax(income, taxRate) {\r...",
+        "suggestedComment": "/**\n * Calculates the tax amount based on the provided income and tax rate.\n * This function is a fundamental part of the financial module, used to compute taxes on income.\n * It directly multiplies the income by the tax rate to determine the tax liability.\n * @param {number} income - The taxable income for which tax needs to be calculated.\n * @param {number} taxRate - The tax rate, expressed as a decimal (e.g., 0.15 for 15%).\n * @returns {number} The calculated tax amount.\n */"
+      },
+      {
+        "file": "test/example.js",
+        "line": 7,
+        "codeSnippet": "function formatCurrency(amount) {\r...",
+        "suggestedComment": "/**\n * Formats a numeric amount into a US dollar currency string.\n * This function is used to ensure consistent display of prices and financial values throughout the application, improving user readability.\n * It prepends a dollar sign ($) and formats the number to two decimal places, representing cents.\n * @param {number} amount - The numeric amount to format as currency.\n * @returns {string} - A string representing the formatted currency in US dollars (e.g., \"$12.50\").\n */"
+      },
+      {
+        "file": "test/example.js",
+        "line": 11,
+        "codeSnippet": "class Person {\r...",
+        "suggestedComment": "/**\n * Person class\n */"
+      }
+    ],
+    "codebaseInfo": {
+      "fileTypes": {
+        ".map": 7,
+        ".js": 8,
+        ".ts": 14,
+        ".local": 1,
+        ".json": 4,
+        ".example": 1,
+        ".md": 1,
+        ".txt": 1
+      },
+      "totalFiles": 37,
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ]
+    }
+  },
+  {
+    "id": "gen-1742143680457",
+    "timestamp": "2025-03-16T16:48:00.457Z",
+    "suggestions": [
+      {
+        "file": "src/index.ts",
+        "line": 12,
+        "codeSnippet": "async function main(options: { interactive?: boolean, temperature?: number }) {\r...",
+        "suggestedComment": "/**\n * main - Asynchronously handles main operation\n * @param options Parameter description\n * @param temperature? Parameter description\n * @returns {Promise} Promise that resolves when the operation completes\n */"
+      },
+      {
+        "file": "src/index.ts",
+        "line": 54,
+        "codeSnippet": "async function handleRemoveComments(options: { interactive?: boolean }) {\r...",
+        "suggestedComment": "/**\n * handleRemoveComments - Asynchronously handles handleremovecomments operation\n * @param options Parameter description\n * @returns {Promise} Promise that resolves when the operation completes\n */"
+      },
+      {
+        "file": "src/suggestions.ts",
+        "line": 41,
+        "codeSnippet": "async function saveSuggestions(suggestions: CommentSuggestion[]): Promise<void> {\r...",
+        "suggestedComment": "/**\n * Saves comment suggestions to a 'komments.json' file in the project root.\n * This function persists comment suggestions across different runs of the application.\n * It reads existing generations from the file, if present, handling potential legacy formats where the file might only contain a flat array of suggestions.\n * If a legacy format is detected, it wraps the existing suggestions into a new generation object.\n * A new 'generation' of suggestions is created for each invocation, including a timestamp and codebase information captured at the time of generation.\n * This allows for tracking and reviewing suggestions generated at different points in time and with different codebase states.\n * The updated list of generations, including the newly provided suggestions, is then written back to the 'komments.json' file.\n *\n * @param suggestions An array of CommentSuggestion objects representing the suggestions to"
+      },
+      {
+        "file": "src/suggestions.ts",
+        "line": 106,
+        "codeSnippet": "async function applySuggestions(suggestions: CommentSuggestion[]): Promise<void> {\r...",
+        "suggestedComment": "/**\n * Presents comment suggestions to the user in an interactive command-line interface for review and application.\n * For each suggestion, the user is prompted to apply, skip, edit, or exit the interactive session.\n * This interactive mode is designed to ensure user oversight and refinement of automatically generated comments before they are applied to source code, promoting code quality and accurate documentation.\n * @param suggestions An array of comment suggestions, each containing details like file path, line number, code snippet, and the suggested comment text.\n * @returns {Promise<void>} A Promise that resolves when the interactive review session is completed.\n */"
+      },
+      {
+        "file": "src/suggestions.ts",
+        "line": 199,
+        "codeSnippet": "async function applyCommentToFile(filePath: string, lineNumber: number, comment: string): Promise<void> {\r...",
+        "suggestedComment": "/**\n * Asynchronously applies a formatted comment to a specific line in a file.\n * This function is designed to programmatically insert comments into code files, adapting to different file types by using the appropriate comment syntax.\n * It resolves file paths, reads file content, determines comment style based on file extension using `getCommentStyle`, formats the comment, inserts it at the specified line, and writes the changes back to the file.\n * The purpose is to automate the process of adding comments to files, ensuring correct syntax for various programming languages and file formats.\n * This is useful in scenarios like code generation, automated documentation, or adding annotations to code.\n * @param filePath The path to the file to be modified. Can be absolute or relative to the project root.\n * @param lineNumber The line number where the comment should be inserted (1-based index).\n * @param comment The comment string to be inserted. The function will handle formatting this comment based on the file type.\n * @returns A Promise that resolves when the comment has been successfully applied to the file.\n */"
+      },
+      {
+        "file": "src/suggestions.ts",
+        "line": 255,
+        "codeSnippet": "function getCommentStyle(extension: string): CommentStyle {\r...",
+        "suggestedComment": "/**\n * Retrieves the appropriate comment style (prefix and suffix) based on the file extension.\n * This function is crucial for ensuring that generated comments are correctly formatted for different programming languages and file types.\n * It's used within the code generation module to dynamically apply the right comment syntax when inserting comments into files of various extensions.\n * The comment styles are pre-defined in a lookup table for efficiency and maintainability.\n * If the provided extension is not found in the lookup table, it defaults to the '//' style, which is a common line comment style in many languages.\n * @param extension The file extension (e.g., '.js', '.py', '.html') as a string. Case-insensitive.\n * @returns An object of type CommentStyle, containing the 'prefix' and 'suffix' strings for comments.\n */"
+      },
+      {
+        "file": "src/suggestions.ts",
+        "line": 286,
+        "codeSnippet": "async function importSuggestions(filePath?: string, interactive: boolean = true): Promise<void> {\r...",
+        "suggestedComment": "```typescript\n/**\n * Imports comment suggestions from a komments.json file and applies them to the codebase.\n * This function facilitates the integration of pre-generated AI comment suggestions into the project.\n * It supports two formats for the komments.json file: an older format containing a direct array of suggestions,\n * and a newer format which is an array of \"generations,\" each containing an array of suggestions and optional codebase information.\n * The function defaults to applying suggestions interactively, prompting the user before applying each suggestion.\n * Alternatively, it can apply all suggestions non-interactively.\n *\n * Design Rationale:\n * This function allows for offline or pre-computed comment suggestions to be easily imported and applied,\n * enabling workflows where comment generation happens separately from the application process.\n * Supporting both formats ensures backward compatibility with older versions of comment generation tools,\n * while the newer format allows for future expansion, such as including codebase context for potentially smarter comment application logic.\n *\n * Business Context:\n * Streamlines the process of integrating AI-generated comments into the codebase, improving developer productivity and code documentation consistency.\n * Allows for batch processing of comment suggestions and review before application.\n *\n * @param filePath - Optional path to the komments.json file. If not provided, defaults to 'komments.json' in the current working directory.\n * @param interactive - Optional boolean indicating whether to apply suggestions interactively (prompting user). Defaults to true.\n * @returns A Promise that resolves when the suggestions have been processed (either interactively or non-interactively) or rejects if an error occurs during file reading, parsing, or application. Returns void on successful completion.\n */\n```"
+      },
+      {
+        "file": "src/suggestions.ts",
+        "line": 353,
+        "codeSnippet": "async function removeComments(filePaths?: string[], interactive: boolean = true): Promise<CommentRemovalOperation> {\r...",
+        "suggestedComment": "```typescript\n/**\n * Asynchronously removes comments from source code files. This function is designed to prepare code for distribution or reduce codebase size by eliminating unnecessary comments.\n * It operates in two modes: either on a specified list of files or by scanning the entire codebase if no file paths are provided.\n * In interactive mode (enabled by default), it prompts the user for confirmation before proceeding with the irreversible comment removal.\n * This is a destructive operation, meaning comments are permanently removed from the files. It's crucial to ensure proper backups or version control before running this function.\n * The function handles different file types by detecting the appropriate comment styles based on file extensions.\n * It logs detailed information about the process, including the number of comments removed from each file and any errors encountered.\n * Finally, it saves a record of the comment removal operation to `komments.json` for auditing and tracking purposes.\n * @param filePaths An optional array of file paths to process. If not provided or empty, the function will scan the entire codebase for files.\n * @param interactive A boolean indicating whether to run in interactive mode, prompting for user confirmation before removing comments. Defaults to true.\n * @returns A Promise that resolves to a CommentRemovalOperation object, containing details about the operation such as timestamp, files processed, comments removed, and per-file details.\n */\n```"
+      },
+      {
+        "file": "src/suggestions.ts",
+        "line": 461,
+        "codeSnippet": "function removeCommentsFromContent(content: string, extension: string, prefix: string, suffix: string): { content: string, count: number } {\r...",
+        "suggestedComment": "/**\n * removeCommentsFromContent handles removecommentsfromcontent operation\n * @param content Parameter description\n * @param extension Parameter description\n * @param prefix Parameter description\n * @param suffix Parameter description\n */"
+      },
+      {
+        "file": "src/suggestions.ts",
+        "line": 505,
+        "codeSnippet": "function scanCodebase(): string[] {\r...",
+        "suggestedComment": "```typescript\n/**\n * Recursively scans the codebase starting from the current working directory to identify files that are likely to contain code comments.\n * This function is designed to locate relevant source code files for further processing, such as documentation generation or code analysis.\n * It traverses the"
+      },
+      {
+        "file": "src/suggestions.ts",
+        "line": 547,
+        "codeSnippet": "async function saveCommentRemovalOperation(operation: CommentRemovalOperation): Promise<void> {\r...",
+        "suggestedComment": "/**\n * saveCommentRemovalOperation - Asynchronously handles savecommentremovaloperation operation\n * @param operation Parameter description\n * @returns {Promise} Promise that resolves when the operation completes\n */"
+      },
+      {
+        "file": "src/suggestions.ts",
+        "line": 599,
+        "codeSnippet": "function collectCodebaseInfo(): CodebaseInfo {\r...",
+        "suggestedComment": "/**\n * collectCodebaseInfo handles collectcodebaseinfo operation\n */"
+      },
+      {
+        "file": "src/suggestions.ts",
+        "line": 654,
+        "codeSnippet": "function getLanguageFromExtension(extension: string): string | null {\r...",
+        "suggestedComment": "/**\n * Retrieves the programming language name based on the provided file extension.\n * This function is used to identify the programming language of a file based on its extension, enabling features like syntax highlighting and language-specific code analysis within the application.\n * It utilizes a predefined mapping of common file extensions to their corresponding language names for efficient lookup.\n * The lookup is case-insensitive, ensuring that extensions like '.JS' and '.js' are treated the same.\n * If the provided extension is not found in the mapping, it returns null indicating an unknown or unsupported language.\n * @param extension The file extension (e.g., '.js', '.py', '.tsx') to identify the language for.\n * @returns The name of the programming language as a string (e.g., 'JavaScript', 'Python', 'TypeScript (React)') or null if the extension is not recognized.\n */"
+      },
+      {
+        "file": "test/example.js",
+        "line": 3,
+        "codeSnippet": "function calculateTax(income, taxRate) {\r...",
+        "suggestedComment": "/**\n * Calculates the tax amount based on the provided income and tax rate.\n * This function implements a basic tax calculation logic, multiplying the income by the tax rate to determine the tax owed.\n * It is used in financial modules to compute tax liabilities.\n * The design rationale is to provide a straightforward and easily understandable function for tax calculation, assuming a simple percentage-based tax model.\n * @param {number} income - The taxable income amount. Must be a non-negative number.\n * @param {number} taxRate - The tax rate, expressed as a decimal (e.g., 0.2 for 20%). Must be a non-negative number between 0 and 1.\n * @returns {number} The calculated tax amount.\n */"
+      },
+      {
+        "file": "test/example.js",
+        "line": 7,
+        "codeSnippet": "function formatCurrency(amount) {\r...",
+        "suggestedComment": "/**\n * Formats a numerical amount into a US dollar currency string.\n * This function is used to ensure consistent display of monetary values throughout the application, making them easily readable for users.\n * It formats the input amount to two decimal places, which is standard for US currency representation, and prepends a dollar sign ($) as the currency symbol.\n * @param {number} amount The numerical amount to be formatted as currency.\n * @returns {string} The formatted currency string in USD format (e.g., \"$12.34\").\n */"
+      },
+      {
+        "file": "test/example.js",
+        "line": 11,
+        "codeSnippet": "class Person {\r...",
+        "suggestedComment": "/**\n * Person class\n */"
+      }
+    ],
+    "codebaseInfo": {
+      "fileTypes": {
+        ".map": 7,
+        ".js": 8,
+        ".ts": 14,
+        ".local": 1,
+        ".json": 4,
+        ".example": 1,
+        ".md": 1,
+        ".txt": 1
+      },
+      "totalFiles": 37,
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ]
+    }
+  },
+  {
+    "id": "gen-1742144460206",
+    "timestamp": "2025-03-16T17:01:00.206Z",
+    "suggestions": [
+      {
+        "file": "src/index.ts",
+        "line": 18,
+        "codeSnippet": "async function main(options: { interactive?: boolean, temperature?: number }) {\r...",
+        "suggestedComment": "/**\n * main - Asynchronously handles main operation\n * @param options Parameter description\n * @param temperature? Parameter description\n * @returns {Promise} Promise that resolves when the operation completes\n */"
+      },
+      {
+        "file": "src/index.ts",
+        "line": 65,
+        "codeSnippet": "async function handleRemoveComments(options: { interactive?: boolean }) {\r...",
+        "suggestedComment": "/**\n * handleRemoveComments - Asynchronously handles handleremovecomments operation\n * @param options Parameter description\n * @returns {Promise} Promise that resolves when the operation completes\n */"
+      },
+      {
+        "file": "src/suggestions.ts",
+        "line": 51,
+        "codeSnippet": "async function saveSuggestions(suggestions: CommentSuggestion[]): Promise<void> {\r...",
+        "suggestedComment": "/**\n * saveSuggestions - Asynchronously handles savesuggestions operation\n * @param suggestions Parameter description\n * @returns {Promise} Promise that resolves when the operation completes\n */"
+      },
+      {
+        "file": "src/suggestions.ts",
+        "line": 123,
+        "codeSnippet": "async function applySuggestions(suggestions: CommentSuggestion[]): Promise<void> {\r...",
+        "suggestedComment": "```typescript\n/**\n * Asynchronously presents comment suggestions to the user in an interactive command-line interface, allowing them to review, edit, and apply each suggestion individually.\n * This function is part of an interactive mode for applying automatically generated comment suggestions to source code files.\n * It iterates through each suggestion, displaying the relevant file, line number, code snippet, and suggested comment.\n * The user is then prompted to choose an action: 'apply' the suggestion as is, 'skip' it, 'edit' it before applying, or 'exit' the interactive session entirely.\n * If 'apply' or 'edit' is chosen, the `applyCommentToFile` function is called to modify the source file with the (potentially edited) comment.\n * This interactive approach provides a crucial step for human review and quality control before automatically generated comments are permanently added to the codebase, ensuring accuracy and relevance.\n * Exiting the interactive mode will stop processing further suggestions.\n * @param suggestions An array of CommentSuggestion objects, each containing details about a suggested comment, including the file path, line number, code snippet, and the suggested comment text.\n * @returns A Promise<void> that resolves when the interactive session is completed (either all suggestions are processed or the user chooses to exit).\n */\n```"
+      },
+      {
+        "file": "src/suggestions.ts",
+        "line": 227,
+        "codeSnippet": "async function applyCommentToFile(filePath: string, lineNumber: number, comment: string): Promise<void> {\r...",
+        "suggestedComment": "```typescript\n/**\n * Asynchronously applies a formatted comment to a specific line in a file.\n * This function is crucial for programmatically adding comments to code files, ensuring correct syntax based on the file type.\n * It resolves the file path, reads the file content, determines the appropriate comment style (e.g., '//', '<!-- -->', '/* */') based on the file extension,\n * formats the provided comment string accordingly, inserts it at the specified line number"
+      },
+      {
+        "file": "src/suggestions.ts",
+        "line": 316,
+        "codeSnippet": "function getCommentStyle(extension: string): CommentStyle {\r...",
+        "suggestedComment": "/**\n * Retrieves the comment style (prefix and suffix) for a given file extension.\n * This function is crucial for dynamically generating comments in various code files within the application, ensuring correct syntax for each language.\n * It uses a predefined mapping of file extensions to their respective comment styles for efficiency and maintainability.\n * The default comment style is single-line (`//`) which is applied if the extension is not found in the mapping.\n * This approach centralizes comment style logic, making it easier to update and manage comment syntax across different file types supported by the application.\n * @param extension The file extension (e.g., '.js', '.py', '.html') as a string. Case-insensitive.\n * @returns An object of type CommentStyle containing the 'prefix' and 'suffix' strings for comments.\n */"
+      },
+      {
+        "file": "src/suggestions.ts",
+        "line": 347,
+        "codeSnippet": "async function importSuggestions(filePath?: string, interactive: boolean = true): Promise<void> {\r...",
+        "suggestedComment": "/**\n * importSuggestions - Asynchronously handles importsuggestions operation\n * @param filePath? Parameter description\n * @param interactive Parameter description\n * @returns {Promise} Promise that resolves when the operation completes\n */"
+      },
+      {
+        "file": "src/suggestions.ts",
+        "line": 428,
+        "codeSnippet": "async function removeComments(filePaths?: string[], interactive: boolean = true): Promise<CommentRemovalOperation> {\r...",
+        "suggestedComment": "/**\n * removeComments - Asynchronously handles removecomments operation\n * @param filePaths? Parameter description\n * @param interactive Parameter description\n * @returns {Promise} Promise that resolves when the operation completes\n */"
+      },
+      {
+        "file": "src/suggestions.ts",
+        "line": 548,
+        "codeSnippet": "function removeCommentsFromContent(content: string, extension: string, prefix: string, suffix: string): { content: string, count: number } {\r...",
+        "suggestedComment": "/**\n * removeCommentsFromContent handles removecommentsfromcontent operation\n * @param content Parameter description\n * @param extension Parameter description\n * @param prefix Parameter description\n * @param suffix Parameter description\n */"
+      },
+      {
+        "file": "src/suggestions.ts",
+        "line": 592,
+        "codeSnippet": "function scanCodebase(): string[] {\r...",
+        "suggestedComment": "/**\n * Recursively scans the codebase starting from the current working directory to identify files that are likely to contain code comments.\n * This function is designed to collect a list of relevant files for subsequent comment extraction or analysis.\n * It traverses directories, skipping 'node_modules' and hidden directories (starting with '.'), to improve performance and focus on project-specific code.\n * Only files with extensions that are associated with known comment styles (determined by `getCommentStyle` function, assumed to be available elsewhere) are included in the result.\n * This filtering is based on the assumption that only files with these extensions are relevant for comment processing in the current business context.\n * Directory read errors are silently caught to prevent the scan from failing due to permission issues or inaccessible directories, ensuring robustness.\n * @returns string[] - An array of absolute file paths within the codebase that are identified as potentially containing code comments.\n */"
+      },
+      {
+        "file": "src/suggestions.ts",
+        "line": 637,
+        "codeSnippet": "async function saveCommentRemovalOperation(operation: CommentRemovalOperation): Promise<void> {\r...",
+        "suggestedComment": "/**\n * saveCommentRemovalOperation - Asynchronously handles savecommentremovaloperation operation\n * @param operation Parameter description\n * @returns {Promise} Promise that resolves when the operation completes\n */"
+      }
+    ],
+    "codebaseInfo": {
+      "fileTypes": {
+        ".map": 7,
+        ".js": 8,
+        ".ts": 14,
+        ".local": 1,
+        ".json": 4,
+        ".example": 1,
+        ".md": 1,
+        ".txt": 1
+      },
+      "totalFiles": 37,
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ]
+    }
+  },
+  {
+    "id": "gen-1742144638575",
+    "timestamp": "2025-03-16T17:03:58.575Z",
+    "suggestions": [
+      {
+        "file": "src/index.ts",
+        "line": 18,
+        "codeSnippet": "async function main(options: { interactive?: boolean, temperature?: number }) {\r...",
+        "suggestedComment": "/**\n * main - Asynchronously handles main operation\n * @param options Parameter description\n * @param temperature? Parameter description\n * @returns {Promise} Promise that resolves when the operation completes\n */"
+      },
+      {
+        "file": "src/index.ts",
+        "line": 65,
+        "codeSnippet": "async function handleRemoveComments(options: { interactive?: boolean }) {\r...",
+        "suggestedComment": "/**\n * Handles the overall process of removing comments.\n * This function validates the API key"
+      },
+      {
+        "file": "src/suggestions.ts",
+        "line": 51,
+        "codeSnippet": "async function saveSuggestions(suggestions: CommentSuggestion[]): Promise<void> {\r...",
+        "suggestedComment": "/**\n * Saves comment suggestions to a 'komments.json' file in the project root.\n * This function persists generated comment suggestions across sessions, allowing for review and later application.\n * It reads any existing 'komments.json' file to maintain previous suggestion generations.\n * If the file exists and is in an older format (just an array of suggestions), it migrates it to the new format.\n * Each save operation creates a new \"generation\" with a unique ID (timestamp-based) and includes codebase information captured at the time of saving.\n * This allows for tracking suggestions over time and contextualizing them with codebase snapshots.\n * @param suggestions An array of comment suggestions to be saved in the new generation.\n * @returns A Promise that resolves when the suggestions are successfully saved to 'komments.json'.\n */"
+      },
+      {
+        "file": "src/suggestions.ts",
+        "line": 123,
+        "codeSnippet": "async function applySuggestions(suggestions: CommentSuggestion[]): Promise<void> {\r...",
+        "suggestedComment": "/**\n * Asynchronously presents an interactive command-line interface to review and apply suggested comments to code files.\n * This function is designed for interactive comment application, allowing users to examine each suggested comment,\n * preview the code context, and decide whether to apply the comment, skip it, edit it before applying, or exit the interactive session.\n * It iterates through an array of `CommentSuggestion` objects, each containing details about a suggested comment,\n * and uses `inquirer` to prompt the user for an action for each suggestion.\n * The purpose is to provide a user-friendly way to manually review and control the application of automatically generated comments,\n * ensuring accuracy and relevance before modifying source code files. This is particularly useful in workflows where\n * automated comment generation is used but human oversight is desired for quality assurance.\n *\n * @param suggestions An array of `CommentSuggestion` objects, each representing a suggested comment and its context (file, line, code snippet).\n * @returns A Promise that resolves when the interactive session is completed or exited.\n */"
+      },
+      {
+        "file": "src/suggestions.ts",
+        "line": 227,
+        "codeSnippet": "async function applyCommentToFile(filePath: string, lineNumber: number, comment: string): Promise<void> {\r...",
+        "suggestedComment": "/**\n * applyCommentToFile - Asynchronously handles applycommenttofile operation\n * @param filePath Parameter description\n * @param lineNumber Parameter description\n * @param comment Parameter description\n * @returns {Promise} Promise that resolves when the operation completes\n */"
+      },
+      {
+        "file": "src/suggestions.ts",
+        "line": 316,
+        "codeSnippet": "function getCommentStyle(extension: string): CommentStyle {\r...",
+        "suggestedComment": "/**\n * Retrieves the comment style (prefix and suffix) based on the provided file extension.\n * This function is used to determine the correct comment syntax for different programming languages when programmatically generating or manipulating code.\n * It relies on a predefined mapping of file extensions to their corresponding comment styles.\n * This ensures that comments added to files are syntactically correct for the target language, improving code readability and maintainability.\n * If the provided extension is not found in the mapping, it defaults to single-line JavaScript-style comments ('//') as a common and widely compatible fallback.\n * The extension lookup is case-insensitive to handle variations in file extension casing.\n * @param extension The file extension string (e.g., '.js', '.py', '.html'). Case-insensitive.\n * @returns An object of type CommentStyle containing the 'prefix' and 'suffix' strings for comments.\n */"
+      },
+      {
+        "file": "src/suggestions.ts",
+        "line": 347,
+        "codeSnippet": "async function importSuggestions(filePath?: string, interactive: boolean = true): Promise<void> {\r...",
+        "suggestedComment": "/**\n * Asynchronously imports comment suggestions from a JSON file and applies them to the codebase.\n * This function facilitates the integration of pre-generated or externally sourced comment suggestions into the project.\n * It reads suggestions from a JSON file, which can be either a specified file path or defaults to 'komments.json' in the current working directory.\n * The JSON file can be in two formats: an older format with a direct array of suggestions, or a newer format with an array of generations, where the latest generation's suggestions are used.\n * In interactive mode (default), it leverages the `applySuggestions` function (assumed to handle user prompts and selective application).\n * In non-interactive mode, it automatically applies all suggestions using `applyCommentToFile` for each suggestion.\n * This process is designed to streamline the incorporation of suggested comments, potentially generated by automated analysis or external tools, into the codebase, enhancing documentation and code clarity.\n * @param filePath Optional path to the JSON file containing comment suggestions. If not provided, defaults to 'komments.json' in the current working directory.\n * @param interactive Boolean flag to enable interactive mode, prompting the user for confirmation before applying suggestions. Defaults to true.\n * @returns A Promise that resolves to void when the import and application process is complete.\n */"
+      },
+      {
+        "file": "src/suggestions.ts",
+        "line": 428,
+        "codeSnippet": "async function removeComments(filePaths?: string[], interactive: boolean = true): Promise<CommentRemovalOperation> {\r...",
+        "suggestedComment": "/**\n * removeComments - Asynchronously handles removecomments operation\n * @param filePaths? Parameter description\n * @param interactive Parameter description\n * @returns {Promise} Promise that resolves when the operation completes\n */"
+      },
+      {
+        "file": "src/suggestions.ts",
+        "line": 548,
+        "codeSnippet": "function removeCommentsFromContent(content: string, extension: string, prefix: string, suffix: string): { content: string, count: number } {\r...",
+        "suggestedComment": "/**\n * removeCommentsFromContent handles removecommentsfromcontent operation\n * @param content Parameter description\n * @param extension Parameter description\n * @param prefix Parameter description\n * @param suffix Parameter description\n */"
+      },
+      {
+        "file": "src/suggestions.ts",
+        "line": 592,
+        "codeSnippet": "function scanCodebase(): string[] {\r...",
+        "suggestedComment": "/**\n * Scans the codebase starting from the current working directory to identify files that potentially contain comments.\n * This function is crucial for tools that analyze or extract comments from source code, such as documentation generators or code quality checkers.\n * It recursively traverses directories, excluding 'node_modules' and hidden directories (starting with '.'), to improve performance and focus on project-specific code.\n * Only files with extensions for which comment styles are defined (determined by `getCommentStyle`) are included, ensuring that only relevant source code files are processed and avoiding unnecessary scanning of irrelevant file types.\n * @returns string[] - An array of strings, where each string is the absolute path to a file within the codebase that is expected to contain comments.\n */"
+      },
+      {
+        "file": "src/suggestions.ts",
+        "line": 637,
+        "codeSnippet": "async function saveCommentRemovalOperation(operation: CommentRemovalOperation): Promise<void> {\r...",
+        "suggestedComment": "/**\n * saveCommentRemovalOperation - Asynchronously handles savecommentremovaloperation operation\n * @param operation Parameter description\n * @returns {Promise} Promise that resolves when the operation completes\n */"
+      },
+      {
+        "file": "src/suggestions.ts",
+        "line": 698,
+        "codeSnippet": "function collectCodebaseInfo(): CodebaseInfo {\r...",
+        "suggestedComment": "/**\n * Collects information about the codebase in the current working directory.\n * This function analyzes the files in the current directory and its subdirectories to determine the file types and programming languages used.\n * It's designed to provide a high-level overview of the project's composition by scanning the file system, counting files by extension, and identifying associated programming languages.\n * The logic skips 'node_modules' directories and hidden directories (starting with '.') to focus analysis on project source code and avoid processing dependency files or configuration directories.\n * Error handling is implemented to gracefully continue scanning even if some directories cannot be read,"
+      },
+      {
+        "file": "src/suggestions.ts",
+        "line": 753,
+        "codeSnippet": "function getLanguageFromExtension(extension: string): string | null {\r...",
+        "suggestedComment": "/**\n * Determines the programming language based on the provided file extension.\n * This function is used to infer the programming language of a file, primarily for features like syntax highlighting or language-specific code processing in applications such as code editors or file viewers.\n * It utilizes a `Record` for efficient lookup of language names based on file extensions. The lookup is case-insensitive by converting the input extension to lowercase to ensure consistent matching regardless of the input case.\n * @param extension The file extension string (e.g., \".js\", \".PY\", \".Tsx\").\n * @returns The programming language name as a string (e.g., \"JavaScript\", \"Python\", \"TypeScript (React)\") if a match is found in the internal language map, otherwise returns null if the extension is not recognized.\n */"
+      },
+      {
+        "file": "test/example.js",
+        "line": 22,
+        "codeSnippet": "function calculateTax(income, taxRate) {\r...",
+        "suggestedComment": "/**\n * Calculates the tax amount based on a given income and tax rate.\n * This function is a core utility for financial calculations, determining tax liability.\n * It applies a simple tax calculation by multiplying the income by the tax rate.\n * This logic is fundamental in accounting and financial applications to determine tax obligations.\n *\n * @param {number} income - The taxable income amount for which tax needs to be calculated.\n * @param {number} taxRate - The tax rate, represented as a decimal (e.g., 0.2 for 20%).\n * @returns {number} The calculated tax amount based on the provided income and tax rate.\n */"
+      },
+      {
+        "file": "test/example.js",
+        "line": 26,
+        "codeSnippet": "function formatCurrency(amount) {\r...",
+        "suggestedComment": "/**\n * Formats a numerical amount as US currency.\n * @param {number} amount The numerical amount to format.\n * @returns {string} The formatted currency string (e.g., \"$12.34\").\n *\n * This function formats a number into a US dollar currency string. It uses toFixed(2) to ensure two decimal places for cents and prepends a dollar sign ($). This is essential for consistently displaying monetary values throughout the application in a user-friendly format, particularly in e-commerce or financial contexts where clear representation of currency is crucial"
+      }
+    ],
+    "codebaseInfo": {
+      "fileTypes": {
+        ".map": 7,
+        ".js": 8,
+        ".ts": 14,
+        ".local": 1,
+        ".json": 4,
+        ".example": 1,
+        ".md": 1,
+        ".txt": 1
+      },
+      "totalFiles": 37,
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ]
+    }
+  },
+  {
+    "id": "gen-1742145754788",
+    "timestamp": "2025-03-16T17:22:34.788Z",
+    "suggestions": [
+      {
+        "file": "src/index.ts",
+        "line": 24,
+        "codeSnippet": "async function main(options: { interactive?: boolean, temperature?: number }) {\r...",
+        "suggestedComment": "/**\n * main - Asynchronously handles main operation\n * @param options Parameter description\n * @param temperature? Parameter description\n * @returns {Promise} Promise that resolves when the operation completes\n */"
+      },
+      {
+        "file": "src/index.ts",
+        "line": 74,
+        "codeSnippet": "async function handleRemoveComments(options: { interactive?: boolean }) {\r...",
+        "suggestedComment": "/**\n * Handles the process of removing comments.\n * This function is the entry point for the comment removal feature. It first validates the API key to ensure it's available for potential future API-dependent operations, even if not immediately used in the current comment removal process. If the API key is invalid, it attempts to guide the user through the setup process. If setup fails, the program exits. Finally, it calls the `removeComments` function to perform the actual comment removal logic. The API key validation step is included to anticipate future enhancements that might leverage cloud services or require authentication for comment processing.\n * @param options - An object containing options for comment removal.\n * @param options.interactive -  A boolean indicating whether to run in interactive mode. If `true` or undefined, `removeComments` will likely prompt the user for confirmation or choices during the removal process. If `false`, it will run non-interactively.\n * @returns A Promise that resolves"
+      },
+      {
+        "file": "src/suggestions.ts",
+        "line": 61,
+        "codeSnippet": "async function saveSuggestions(suggestions: CommentSuggestion[]): Promise<void> {\r...",
+        "suggestedComment": "/**\n * Saves comment suggestions to a persistent file (komments.json) in the project root.\n * This function ensures that generated comment suggestions are stored across multiple runs of the tool.\n * It reads an existing komments.json file if present, handling potential errors and legacy file formats.\n * If the file exists, it parses the content, and if the content is not in the expected array format (indicating an older version),\n * it migrates the data to the new format by wrapping the old suggestions into a 'legacy' generation.\n * A new 'generation' of suggestions is created for each run, identified by a timestamp-based ID.\n * Each generation includes the timestamp, the suggestions themselves, and codebase information gathered by `collectCodebaseInfo()`\n * to provide context for the suggestions (e.g., project structure, dependencies).\n * The new generation is appended to the existing generations array (or becomes the first generation if the file is new or empty).\n * Finally, the updated array of generations is written back to the komments.json file, overwriting the previous content.\n * This approach allows for tracking historical suggestions and potentially comparing suggestions across different runs or codebase states.\n * @param suggestions An array of CommentSuggestion objects representing the suggestions to be saved.\n * @returns {Promise<void>} A Promise that resolves when the suggestions are successfully saved to the file.\n */"
+      },
+      {
+        "file": "src/suggestions.ts",
+        "line": 146,
+        "codeSnippet": "async function applySuggestions(suggestions: CommentSuggestion[]): Promise<void> {\r...",
+        "suggestedComment": "/**\n * Presents an interactive command-line interface for reviewing and applying comment suggestions.\n * This function guides the user through each suggested comment, displaying the relevant code context and the proposed comment.\n * It allows the user to choose to apply the suggestion as is, skip it, edit it before applying, or exit the interactive review process.\n * This interactive mode is designed to provide a human-in-the-loop approach to automated comment generation, ensuring that only relevant and appropriate comments are added to the codebase.\n * It is intended to be used as part of a code improvement or documentation workflow where automated suggestions need manual validation and control before being permanently applied to source files.\n * @param suggestions An array of CommentSuggestion objects, each containing details about a suggested comment, including the file path, line number, code snippet, and the suggested comment text.\n * @returns A Promise<void> that resolves when the interactive session is completed, either by reviewing all suggestions or by the user choosing to exit.\n */"
+      },
+      {
+        "file": "src/suggestions.ts",
+        "line": 257,
+        "codeSnippet": "async function applyCommentToFile(filePath: string, lineNumber: number, comment: string): Promise<void> {\r...",
+        "suggestedComment": "/**\n * Asynchronously applies a comment to a specific line in a file.\n * This function is designed to programmatically modify code files by inserting comments,\n * which is useful for tools that automate code documentation, annotation, or modification.\n * It intelligently handles different comment styles based on the file extension and\n * supports both single-line and multi-line comments, as well as"
+      },
+      {
+        "file": "src/suggestions.ts",
+        "line": 373,
+        "codeSnippet": "function getCommentStyle(extension: string): CommentStyle {\r...",
+        "suggestedComment": "/**\n * Retrieves the appropriate comment style (prefix and suffix) for a given file extension.\n * This function is crucial for ensuring that comments generated programmatically are correctly formatted for different programming languages and file types.\n * It supports a variety of common file extensions, mapping them to their respective single-line or multi-line comment styles.\n * The business context is to provide a consistent and accurate way to generate comments in a code generation or annotation tool, regardless of the target file's language.\n * The design rationale is to use a lookup table (Record) for efficient retrieval of comment styles based on file extension.\n * If an extension is not explicitly defined, it defaults to a single-line comment style (`//`) as a safe fallback for most text-based file formats.\n * @param extension - The file extension (e.g., '.js', '.py', '.html'). Case-insensitive.\n * @returns An object of type CommentStyle containing the comment `prefix` and `suffix` strings for the given extension.\n */"
+      },
+      {
+        "file": "src/suggestions.ts",
+        "line": 404,
+        "codeSnippet": "async function importSuggestions(filePath?: string, interactive: boolean = true): Promise<void> {\r...",
+        "suggestedComment": "/**\n * Asynchronously imports comment suggestions from a JSON file, allowing for batch application of pre-generated comments.\n * This function is designed to integrate with comment generation workflows where suggestions are created separately (e.g., by an AI or offline process) and then imported for application.\n * It reads comment suggestions from a specified JSON file (or defaults to 'komments.json' in the current directory), supporting two JSON formats: a direct array of suggestions (legacy format) or an array of generations with the latest generation's suggestions being used (current format).\n * The function operates in either interactive mode (default), prompting the user to confirm each suggestion before applying, or non-interactive mode, applying all suggestions automatically.\n * This is useful for applying a batch of approved or pre-reviewed comment suggestions to the codebase in a controlled or automated manner.\n * @param filePath Optional path to the JSON file containing comment suggestions. If not provided, defaults to 'komments.json' in the current working directory.\n * @param interactive Determines if suggestions should be applied interactively, prompting for confirmation before each application. Defaults to true.\n * @returns A Promise<void> that resolves when the suggestion import and application process is complete.\n */"
+      },
+      {
+        "file": "src/suggestions.ts",
+        "line": 491,
+        "codeSnippet": "async function removeComments(filePaths?: string[], interactive: boolean = true): Promise<CommentRemovalOperation> {\r...",
+        "suggestedComment": "/**\n * removeComments - Asynchronously handles removecomments operation\n * @param filePaths? Parameter description\n * @param interactive Parameter description\n * @returns {Promise} Promise that resolves when the operation completes\n */"
+      },
+      {
+        "file": "src/suggestions.ts",
+        "line": 625,
+        "codeSnippet": "function removeCommentsFromContent(content: string, extension: string, prefix: string, suffix: string): { content: string, count: number } {\r...",
+        "suggestedComment": "/**\n * Removes comments from the provided content string based on specified prefixes, suffixes, and file extensions.\n * This function is designed to preprocess text or code by eliminating comments, which can be useful for analysis, parsing, or other text processing tasks.\n * It supports removing both block comments (defined by a prefix and suffix) and line comments (defined by a prefix only).\n * For JavaScript/TypeScript files, it also specifically removes standard JS/TS block comments (`/* ... */`) regardless of the provided prefix/suffix, to ensure comprehensive comment removal in these languages.\n * The function first escapes special regex characters in the provided prefix and suffix to ensure accurate matching.\n * It then uses regular expressions to identify and remove comment blocks and/or lines based on whether a suffix is provided.\n * Finally, it cleans up any extra empty lines that might result from comment removal to improve readability of the output content.\n * @param content The string content from which to remove comments.\n * @param extension The file extension of the content, used for language-specific comment handling (e.g., '.js', '.ts').\n * @param prefix The prefix that indicates the start of a comment (e.g., '//', '#', '/*').\n * @param suffix The optional suffix that indicates the end of a block comment (e.g., '*/'). If not provided, only line comments based on the prefix are removed.\n * @returns An object containing the `content` string with comments removed and a `count` indicating the number of comments removed.\n */"
+      },
+      {
+        "file": "src/suggestions.ts",
+        "line": 674,
+        "codeSnippet": "function scanCodebase(): string[] {\r...",
+        "suggestedComment": "/**\n * scanCodebase handles scancodebase operation\n */"
+      },
+      {
+        "file": "src/suggestions.ts",
+        "line": 725,
+        "codeSnippet": "async function saveCommentRemovalOperation(operation: CommentRemovalOperation): Promise<void> {\r...",
+        "suggestedComment": "/**\n * saveCommentRemovalOperation - Asynchronously handles savecommentremovaloperation operation\n * @param operation Parameter description\n * @returns {Promise} Promise that resolves when the operation completes\n */"
+      }
+    ],
+    "codebaseInfo": {
+      "fileTypes": {
+        ".map": 7,
+        ".js": 8,
+        ".ts": 14,
+        ".local": 1,
+        ".json": 4,
+        ".example": 1,
+        ".md": 1,
+        ".txt": 1
+      },
+      "totalFiles": 37,
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ]
+    }
   }
 ]
